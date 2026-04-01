@@ -1,4 +1,4 @@
-from flask import Falsk, render_template
+from flask import Flask, render_template
 from src.predictor import AQIPredictor
 import datetime
 
