@@ -4,7 +4,7 @@ import numpy as np
 import os 
 
 class AQIPredictor:
-    def __init__(self, model_path='models/aqi_stacking_model.pkl', features_path='models/,model_features.pkl'):
+    def __init__(self, model_path='models/aqi_stacking_model.pkl', features_path='models/model_features.pkl'):
         print("--- EasternMartin Technologies: Initializing Prediction Engine ---")
 
         # Brain (Model) load karna 
