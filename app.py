@@ -1,7 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from src.predictor import AQIPredictor
 import datetime
-import requests as request
 
 # initilizing the flask app
 app = Flask(__name__, template_folder='web/templates', static_folder='web.static')
