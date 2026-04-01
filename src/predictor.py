@@ -2,6 +2,7 @@ import joblib
 import pandas as pd 
 import numpy as np
 import os 
+import re
 
 class AQIPredictor:
     def __init__(self, model_path='models/aqi_stacking_model.pkl', features_path='models/model_features.pkl'):
@@ -26,6 +27,9 @@ class AQIPredictor:
 
         # Encoding: Training ke waqt jo city columns bane the, wahi yahan bhi cahiye 
         df_input = pd.get_dummies(df_input)
+
+        # lightBGM Clean (No Special Chars)
+        df_input = df_input.rename(columns=lambda x: re.sub('[^A-Za-z0-9_]+', ''))
 
         # Missing columns ko 0 se bharna (jo columns trainning me the par input me nhi hai)
         for col in self.model_features:
