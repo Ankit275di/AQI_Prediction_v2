@@ -24,7 +24,11 @@ def train_model(input_path='data/processed/features_data.csv', model_dir='models
     y = df['AQI']
 
     # features are everything else. we drop 'date' because ML models need numbers, and we already extracted month/DateofWeek in the previous step.
-    X = df.drop(columns=['AQI', 'Date'])
+    # X = df.drop(columns=['AQI', 'Date']) --> off machine
+    columns_to_drop = ['AQI', 'Date']
+    if 'AQI_Bucket' in df.columns:
+        columns_to_drop.append('AQI_Bucket')
+    X = df.drop(columns=columns_to_drop)
 
     # one hot encoding converts cities into binary columns (0s and 1s)
     print("[INFO] Encoding categorical variables (City) ...")
