@@ -3,7 +3,7 @@ from src.predictor import AQIPredictor
 import datetime
 
 # initilizing the flask app
-app = Flask(__name__, template_folder='web/templates', static_folder='web.static')
+app = Flask(__name__, template_folder='web/templates', static_folder='web/static')
 
 # initilize the AQI Engine 
 predictor = AQIPredictor()
@@ -23,13 +23,13 @@ def predict():
     try:
         # get data from the form 
         data = {
-            'City': request.form.get('city'),
-            'PM2.5': float(request.form.get('pm2.5')),
-            'PM10': float(request.form.get('pm10')),
-            'NO2': float(request.form.get('no2')),
-            'CO': float(request.form.get('co')),
-            'SO2': float(request.form.get('so2')),
-            'AQI_Lag1': float(request.form.get('lag1')),
+            'City': request.form.get('city', 'Delhi'),
+            'PM2.5': float(request.form.get('pm25') or 0.0),
+            'PM10': float(request.form.get('pm10')or 0.0),
+            'NO2': float(request.form.get('no2')or 0.0),
+            'CO': float(request.form.get('co')or 0.0),
+            'SO2': float(request.form.get('so2')or 0.0),
+            'AQI_Lag1': float(request.form.get('lag1')or 0.0),
             'Month': datetime.datetime.now().month,
             'Day': datetime.datetime.now().day,
             'DayOfWeek': datetime.datetime.now().weekday()
