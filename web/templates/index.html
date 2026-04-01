@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EasternMartin | AQI Predictor V2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', sans-serif; }
+        .card { background-color: #1e293b; border: none; border-radius: 15px; }
+        .btn-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; }
+        .result-box { border-left: 5px solid; padding: 20px; border-radius: 10px; background: #334155; }
+        label { color: #94a3b8; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">EasternMartin <span class="text-primary">Technologies</span></h1>
+            <p class="text-muted">AQI Prediction Engine V2.0 | Powered by Stacking Regressor</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card p-4 shadow-lg">
+                    <form action="/predict" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label>City Name</label>
+                                <input type="text" name="city" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Delhi" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>PM2.5 Level</label>
+                                <input type="number" step="0.01" name="pm25" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>PM10 Level</label>
+                                <input type="number" step="0.01" name="pm10" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Yesterday's AQI (Lag)</label>
+                                <input type="number" step="0.01" name="lag1" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>CO Level</label>
+                                <input type="number" step="0.01" name="co" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>NO2 Level</label>
+                                <input type="number" step="0.01" name="no2" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>SO2 Level</label>
+                                <input type="number" step="0.01" name="so2" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold">Execute AI Prediction</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                {% if prediction %}
+                <div class="result-box mt-md-0 mt-4" style="border-color: {{ color }};">
+                    <h3 class="mb-0">Prediction for {{ city }}</h3>
+                    <h1 class="display-1 fw-bold" style="color: {{ color }};">{{ prediction }}</h1>
+                    <p class="h4">Status: <strong>{{ status }}</strong></p>
+                    <hr class="border-secondary">
+                    <p class="text-muted">This result is based on a multi-model stacking architecture with 96% R2 accuracy.</p>
+                </div>
+                {% else %}
+                <div class="text-center p-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1684/1684374.png" width="100" class="opacity-25 mb-3" alt="Wait">
+                    <p class="text-muted">Enter environmental parameters to see the AI analysis.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
