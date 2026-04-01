@@ -31,8 +31,14 @@ def train_model(input_path='data/processed/features_data.csv', model_dir='models
     X = df.drop(columns=columns_to_drop)
 
     # one hot encoding converts cities into binary columns (0s and 1s)
+    # AI Models dont understand text like city names 
     print("[INFO] Encoding categorical variables (City) ...")
     X = pd.get_dummies(X, columns=['City'], drop_first=True)
+
+    # ---------- yeah new edit hai ---------------------
+    import re
+    X = X.rename(columns=lambda x: re.sub('[^A-Za-z0-9_]+', '', x))
+    # --------------------------------------------------
 
     # split data into training (80%) and testing(20%)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
