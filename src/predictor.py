@@ -44,14 +44,15 @@ if __name__=="__main__":
     # hume wahi columns dene honge jo tranning me use hue 
     engine = AQIPredictor()
     sample_input = {
-        'PM2.5': 80.5,
-        'PM10': 120.0,
-        'NO2': 45.2,
-        'CO': 1.2,
-        'SO2': 10.5,
-        'Month': 4,
-        'DayOfWeek': 2,
-        'AQI_Lag1': 150.0,
+        'PM2.5': 250.0,
+        'PM10': 400.0,
+        'NO2': 80.0,
+        'CO': 2.5,
+        'SO2': 11.0,
+        'Month': 11,
+        'Day':15,
+        'DayOfWeek': 3,
+        'AQI_Lag1': 380.0,
         'City': 'Delhi'
     }
 
