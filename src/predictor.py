@@ -22,6 +22,14 @@ class AQIPredictor:
         Output: Predicted AQI
         """
 
+        pollutants = ['PM2.5', 'PM10', 'NO2', 'CO', 'SO2']
+        for p in pollutants:
+            if p in input_data:
+                if f'{p}_Lag1' not in input_data:
+                    input_data[f'{p}_Lag1'] = input_data[p]
+                if f'{p}_Roll3' not in input_data:
+                    input_data[f'{p}_Roll3'] = input_data[p]
+
         # dictonary ko data frame me convert karna hai 
         df_input = pd.DataFrame([input_data])
 
@@ -29,7 +37,7 @@ class AQIPredictor:
         df_input = pd.get_dummies(df_input)
 
         # lightBGM Clean (No Special Chars)
-        df_input = df_input.rename(columns=lambda x: re.sub('[^A-Za-z0-9_]+', ''))
+        df_input = df_input.rename(columns=lambda x: re.sub('[^A-Za-z0-9_]+', '', x))
 
         # Missing columns ko 0 se bharna (jo columns trainning me the par input me nhi hai)
         for col in self.model_features:
