@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.ensemble import RandomForestRegressor, StackingRegressor
 from sklearn.linear_model import Ridge
+from sklearn.linear_model import LinearRegression
 import xgboost as xgb
 import lightgbm as lgb
 import os
@@ -45,8 +46,9 @@ def train_model(input_path='data/processed/features_data.csv', model_dir='models
     print(f"[INFO] Training AI on {X_train.shape[0]} rows. Testing on {X_test.shape[0]} rows.")
 
     # define the stacking architecture
-    print("[INFO] Initilizing Stacking Regressor (XGBoost + LightGBmM + Random Forest Regression)...")
+    print("[INFO] Initilizing Stacking Regressor (Linear Regression + XGBoost + LightGBmM + Random Forest Regression)...")
     base_models = [
+        ('lr', LinearRegression (n_jobs=-1)),
         ('rf', RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)),
         ('xgb', xgb.XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42)),
         ('lgb', lgb.LGBMRegressor(n_estimators=100, random_state=42, verbose=-1))
