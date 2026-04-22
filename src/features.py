@@ -2,7 +2,7 @@ import pandas as pd
 import os 
 
 def engineering_features(input_path='data/processed/city_day_clean.csv', output_path='data/processed/features_data.csv'):
-    print(f"---EasternMartin Technologies: Feature Engineering Engine ---")
+    print(f"--- EasternMartin Technologies: Feature Engineering Engine ---")
 
     # 1. File Check 
     if not os.path.exists(input_path):
