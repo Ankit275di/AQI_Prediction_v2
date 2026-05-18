@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from src.predictor import AQIPredictor
 import datetime
+import traceback
 
 # initilizing the flask app
 app = Flask(__name__, template_folder='web/templates', static_folder='web/static')
@@ -18,43 +19,59 @@ def home():
     }
     return render_template('index.html', **context)
 
-@app.route('/predict', methods=["POST"])
+@app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # get data from the form 
-        data = {
-            'City': request.form.get('city', 'Delhi'),
-            'PM2.5': float(request.form.get('pm25') or 0.0),
-            'PM10': float(request.form.get('pm10')or 0.0),
-            'NO2': float(request.form.get('no2')or 0.0),
-            'CO': float(request.form.get('co')or 0.0),
-            'SO2': float(request.form.get('so2')or 0.0),
-            'AQI_Lag1': float(request.form.get('lag1')or 0.0),
-            'Month': datetime.datetime.now().month,
-            'Day': datetime.datetime.now().day,
-            'DayOfWeek': datetime.datetime.now().weekday()
+        # 1. Form se data lena (Ozone O3 is here)
+        input_data = {
+            'City': request.form.get('city'),
+            'AQI_Lag1': float(request.form.get('lag1', 0)),
+            'PM2.5': float(request.form.get('pm25', 0)),
+            'PM10': float(request.form.get('pm10', 0)),
+            'NO2': float(request.form.get('no2', 0)),
+            'CO': float(request.form.get('co', 0)),
+            'SO2': float(request.form.get('so2', 0)),
+            'O3': float(request.form.get('o3', 0))
         }
 
-        # fire the AI Brain
-        prediction = predictor.predict(data)
+        # 2. Engine se dictionary receive karna (FIXED: changed 'engine' to 'predictor')
+        results = predictor.predict(input_data)
+        
+        # 3. Dictionary se exact numbers nikalna aur Float mein convert karna (FIXED)
+        final_aqi = float(results['Recommended_AQI'])
+        dl_aqi = float(results['DL_AQI'])
 
-        # determine color category 
-        color = "#2ecc71" # good category
-        status = "Good"
-        if prediction > 50: color, status = "#f1c40f", "Satisfactory"
-        if prediction > 100: color, status = "#e67e22", "Moderate"
-        if prediction > 200: color, status = "#e74c3c", "Poor"
-        if prediction > 300: color, status = "#9b59b6", "Very Poor"
-        if prediction > 400: color, status = "#7f8c8d", "Severe"
+        # 4. Category logic
+        if final_aqi <= 50:
+            category = "Good"
+        elif final_aqi <= 100:
+            category = "Moderate"
+        elif final_aqi <= 150:
+            category = "Unhealthy for Sensitive Groups"
+        elif final_aqi <= 200:
+            category = "Unhealthy"
+        elif final_aqi <= 300:
+            category = "Very Unhealthy"
+        else:
+            category = "Hazardous"
 
+        # (Optional) Mock trend data for the chart, until LSTM backend is fully connected
+        mock_trend = [round(final_aqi + (i * 2.5), 2) for i in range(12)]
+
+        # 5. UI ko data bhejna
         return render_template('index.html', 
-                               prediction=prediction,
-                               status=status,
-                               color=color,
-                               city=data['City'])
-    except Exception as e:
-        return f"Error in Prediction: {str(e)}"
+                               prediction=final_aqi, 
+                               category=category, 
+                               dl_prediction=dl_aqi,
+                               trend_data=mock_trend)
 
+    except Exception as e:
+        # Deep Error Logging
+        error_trace = traceback.format_exc()
+        print("\n--- [CRITICAL ERROR TRACE] ---")
+        print(error_trace)
+        print("------------------------------\n")
+        return f"Error in Prediction: {str(e)} <br><br> <b>Check VS Code Terminal for exact line number!</b>"
 
 if __name__ == "__main__":
     print("[SYSTEM] Starting Local Development Server...")
