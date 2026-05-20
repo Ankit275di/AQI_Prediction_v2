@@ -3,139 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasternMartin | AccuAQI V2.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Air Quality Forecaster Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Root Variables for Theming --- */
+        /* --- Completely New Sky Blue & Light Green Theme --- */
         :root {
-            --bg-color: #12121e;
-            --panel-bg: rgba(26, 26, 46, 0.75);
-            --panel-border: rgba(0, 245, 212, 0.2);
-            --primary-accent: #00f5d4;
-            --secondary-accent: #00bfff;
-            --text-color: #e0e0e0;
-            --text-muted: #a0a0a0;
-            --font-family: 'Exo 2', sans-serif;
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #dcfce7 100%); /* Sky Blue to Light Green */
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --sky-blue: #0ea5e9;
+            --light-green: #22c55e;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --font-family: 'Poppins', sans-serif;
             
-            /* AQI Category Colors */
-            --color-good: #00f5d4;
-            --color-moderate: #f5dd00;
-            --color-unhealthy-sensitive: #ff9900;
-            --color-unhealthy: #ff4d4d;
-            --color-very-unhealthy: #a64dff;
-            --color-hazardous: #d90000;
-            --color-pending: #a0a0a0;
+            /* AQI Colors */
+            --color-good: #22c55e;
+            --color-satisfactory: #eab308;
+            --color-moderate: #f97316;
+            --color-poor: #ef4444;
+            --color-very-poor: #a855f7;
+            --color-severe: #7f1d1d;
+            --color-pending: #94a3b8;
         }
 
-        /* --- General Body Styling --- */
         body {
             font-family: var(--font-family);
-            background: linear-gradient(135deg, var(--bg-color), #1a1a2e);
-            color: var(--text-color);
+            background: var(--bg-gradient);
+            color: var(--text-dark);
             margin: 0;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* --- Main Dashboard Layout --- */
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* --- Sidebar Navigation --- */
-        .sidebar {
-            flex: 0 0 280px;
-            background: var(--panel-bg);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid var(--panel-border);
-            padding: 25px;
-            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
         }
-        .sidebar-header {
-            font-size: 2.2em;
-            font-weight: 700;
-            color: var(--primary-accent);
-            text-shadow: 0 0 10px var(--primary-accent);
+
+        /* --- Top Navigation & Header --- */
+        .top-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px 40px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .top-header h1 {
             margin: 0;
+            font-size: 2.2em;
+            color: var(--sky-blue);
+            font-weight: 700;
         }
-        .sidebar-header span {
-            font-weight: 300;
-            color: var(--text-color);
-            text-shadow: none;
+        .top-header h1 span {
+            color: var(--light-green);
         }
-        .brand-sub {
-            font-size: 0.8em;
+        .top-header p {
+            margin: 5px 0 0 0;
             color: var(--text-muted);
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .sidebar h3 {
-            border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 10px;
-            margin-top: 20px;
+            font-size: 0.9em;
             font-weight: 500;
-            color: var(--secondary-accent);
         }
-        .city-list {
-            overflow-y: auto;
-            flex-grow: 1;
+
+        /* --- Horizontal City Selector (Replaced Sidebar) --- */
+        .city-scroller {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.4);
+            white-space: nowrap;
+            scrollbar-width: thin;
         }
-        .city-list p {
-            margin: 12px 0;
-            font-size: 0.95em;
-            color: var(--text-muted);
-            transition: color 0.2s, transform 0.2s;
-            cursor: pointer; /* Changed to pointer so it feels clickable */
+        .city-scroller::-webkit-scrollbar {
+            height: 6px;
         }
-        .city-list p:hover {
-            color: var(--primary-accent);
-            transform: translateX(5px);
+        .city-scroller::-webkit-scrollbar-thumb {
+            background-color: var(--sky-blue);
+            border-radius: 10px;
+        }
+        .city-pill {
+            padding: 8px 20px;
+            background: #ffffff;
+            border: 1px solid var(--sky-blue);
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: var(--sky-blue);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(14, 165, 233, 0.1);
+        }
+        .city-pill:hover {
+            background: var(--sky-blue);
+            color: #ffffff;
+            transform: translateY(-2px);
         }
 
         /* --- Main Content Area --- */
-        .main-content {
+        .main-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
             flex-grow: 1;
-            padding: 40px;
-            overflow-y: auto;
         }
-        .main-header {
-            margin-bottom: 30px;
-        }
-        .main-header h1 {
-            font-size: 2.5em;
-            font-weight: 700;
-            margin: 0;
-        }
-        .main-header p {
-            font-size: 1.1em;
-            color: var(--text-muted);
-            margin: 5px 0 0 0;
-        }
-        .model-info {
-            font-size: 0.9em;
-            color: var(--secondary-accent);
-            font-weight: 500;
-        }
-
-        /* --- Form & Result Grid --- */
         .content-grid {
             display: grid;
-            grid-template-columns: 1.8fr 1.2fr;
+            grid-template-columns: 1fr 1fr;
             gap: 30px;
-            margin-bottom: 30px;
         }
-        .form-container, .right-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+
+        /* --- Glassmorphism Cards --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+        .glass-card h2 {
+            margin-top: 0;
+            color: var(--sky-blue);
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
         }
 
         /* --- Form Styling --- */
@@ -146,332 +138,259 @@
         }
         .input-group {
             flex: 1;
-            position: relative;
         }
         .input-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-color);
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--text-dark);
         }
         .input-group input {
             width: 100%;
-            padding: 12px 15px 12px 40px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            font-size: 1em;
-            color: var(--text-color);
+            padding: 12px 15px;
+            background: #ffffff;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font-size: 0.95em;
+            color: var(--text-dark);
             font-family: var(--font-family);
             box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
         }
         .input-group input:focus {
             outline: none;
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+            border-color: var(--light-green);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
         }
-        .input-group .icon {
-            position: absolute;
-            left: 12px;
-            top: 38px;
-            font-size: 1.2em;
-            color: var(--text-muted);
-        }
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
 
-        /* --- Button --- */
+        /* --- Gradient Button --- */
         .btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            background: linear-gradient(90deg, var(--sky-blue), var(--light-green));
             border: none;
-            border-radius: 8px;
-            color: var(--bg-color);
+            border-radius: 10px;
+            color: #ffffff;
             font-size: 1.1em;
-            font-weight: 700;
+            font-weight: 600;
             font-family: var(--font-family);
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
         }
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 245, 212, 0.4);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
         }
 
-        /* --- Right Panel (Clock + Result) --- */
-        .clock-container {
-            text-align: center;
-            border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-        .clock-container p {
-            margin: 0 0 5px 0;
-            font-size: 0.9em;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        #clock-time {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: var(--primary-accent);
-            text-shadow: 0 0 8px rgba(0, 245, 212, 0.6);
-        }
-
+        /* --- Result Section --- */
         .result-container {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .result-container h2 {
-            margin-top: 0;
-            font-weight: 500;
-            color: var(--secondary-accent);
-        }
-        .result-dial {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 6px solid var(--color-pending);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5) inset;
+            height: 100%;
+        }
+        
+        .result-dial {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 8px solid var(--color-pending);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
         .result-value {
-            font-size: 2.6em;
+            font-size: 3em;
             font-weight: 700;
-            color: var(--text-color);
-            line-height: 1.1;
+            color: var(--text-dark);
+            line-height: 1;
         }
         .result-category {
-            font-size: 0.85em;
-            font-weight: 500;
+            font-size: 1em;
+            font-weight: 600;
             color: var(--text-muted);
+            margin-top: 8px;
             text-align: center;
-            padding: 0 10px;
-            margin-top: 5px;
         }
 
-        /* Dual Engine Comparison Box */
+        /* Naya Dual Engine Box */
         .dual-engine-box {
             width: 100%;
-            margin-top: 20px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            padding: 15px;
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 20px;
             font-size: 0.9em;
-            border: 1px dashed var(--panel-border);
+            border-left: 5px solid var(--sky-blue);
         }
         .dual-engine-box div {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
-        .dl-text { color: #a64dff; font-weight: bold; }
-        .ml-text { color: var(--primary-accent); font-weight: bold; }
+        .dl-text { color: var(--light-green); font-weight: 700; }
+        .ml-text { color: var(--sky-blue); font-weight: 700; }
 
         /* Dynamic Colors for Jinja */
         {% if category %}
             {% set cat_class = category|lower|replace(' ', '-') %}
-            .result-dial { border-color: var(--color-{{ cat_class }}); box-shadow: 0 0 20px var(--color-{{ cat_class }}); }
+            .result-dial { border-color: var(--color-{{ cat_class }}); }
             .result-category { color: var(--color-{{ cat_class }}); }
-            .result-value { color: var(--color-{{ cat_class }}); }
         {% endif %}
 
         .footer {
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
             color: var(--text-muted);
             font-size: 0.85em;
+            margin-top: auto;
         }
 
-        @media (max-width: 992px) {
+        @media (max-width: 850px) {
             .content-grid { grid-template-columns: 1fr; }
-            .dashboard-container { flex-direction: column; }
-            .sidebar { border-right: none; border-bottom: 1px solid var(--panel-border); }
         }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <h2 class="sidebar-header">Accu<span>AQI</span></h2><br>
-            <div class="brand-sub">Engineered by EasternMartin R&D</div>
-            
-            <h3>Available Cities</h3>
-            <div class="city-list">
-                <p>Ahmedabad</p>
-                <p>Amaravati</p>
-                <p>Amritsar</p>
-                <p>Bengaluru</p>
-                <p>Bhopal</p>
-                <p>Chandigarh</p>
-                <p>Chennai</p>
-                <p>Coimbatore</p>
-                <p>Delhi</p>
-                <p>Ernakulam</p>
-                <p>Gurugram</p>
-                <p>Guwahati</p>
-                <p>Hyderabad</p>
-                <p>Jaipur</p>
-                <p>Kochi</p>
-                <p>Kolkata</p>
-                <p>Lucknow</p>
-                <p>Mumbai</p>
-            </div>
-        </aside>
+    <header class="top-header">
+        <h1>AQI <span>Forecaster</span></h1>
+        <p>Machine Learning & ANN Powered Environmental Telemetry</p>
+    </header>
 
-        <main class="main-content">
-            <header class="main-header">
-                <h1>AQI Intelligence Engine V2.0</h1>
-                <p>Enter telemetry data to initialize Dual-Engine.</p>
-                <p class="model-info">Core: Stacking ML vs Neural Network.</p>
-            </header>
-
-            <div class="content-grid">
-                <form class="form-container" id="aqi-form" action="/predict" method="post">
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="City">City Name</label>
-                            <input type="text" id="City" name="city" required placeholder="e.g., Delhi" value="{{ request.form.get('city', '') }}">
-                            <span class="icon">🏙️</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="lag1">Yesterday's AQI (Lag1)</label>
-                            <input type="number" id="lag1" name="lag1" step="0.01" required placeholder="e.g., 380.00" value="{{ request.form.get('lag1', '') }}">
-                            <span class="icon">📅</span>
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="PM2.5">PM2.5 Level</label>
-                            <input type="number" id="PM2.5" name="pm25" step="0.01" required placeholder="e.g., 250.00" value="{{ request.form.get('pm25', '') }}">
-                            <span class="icon">💨</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="PM10">PM10 Level</label>
-                            <input type="number" id="PM10" name="pm10" step="0.01" required placeholder="e.g., 400.00" value="{{ request.form.get('pm10', '') }}">
-                            <span class="icon">🌫️</span>
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="NO2">Nitrogen Dioxide (NO2)</label>
-                            <input type="number" id="NO2" name="no2" step="0.01" required placeholder="e.g., 80.00" value="{{ request.form.get('no2', '') }}">
-                            <span class="icon">🚗</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="CO">Carbon Monoxide (CO)</label>
-                            <input type="number" id="CO" name="co" step="0.01" required placeholder="e.g., 2.50" value="{{ request.form.get('co', '') }}">
-                            <span class="icon">🏭</span>
-                        </div>
-                    </div>
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="SO2">Sulfur Dioxide (SO2)</label>
-                            <input type="number" id="SO2" name="so2" step="0.01" required placeholder="e.g., 11.00" value="{{ request.form.get('so2', '') }}">
-                            <span class="icon">🌋</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="O3">Ozone (O3)</label>
-                            <input type="number" id="O3" name="o3" step="0.01" required placeholder="e.g., 40.00" value="{{ request.form.get('o3', '') }}">
-                            <span class="icon">☀️</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn" id="predict-btn">Initialize Prediction Protocols</button>
-                </form>
-
-                <div class="right-panel">
-                    <div class="clock-container">
-                        <p>System Time</p>
-                        <span id="clock-time">00:00:00 AM</span>
-                    </div>
-
-                    <div class="result-container">
-                        <h2>Prediction Result</h2>
-                        <div class="result-dial" id="result-dial">
-                            {% if prediction %}
-                                <span class="result-value">{{ prediction }}</span>
-                                <span class="result-category">{{ category }}</span>
-                            {% else %}
-                                <span class="result-value">---</span>
-                                <span class="result-category">Standby</span>
-                            {% endif %}
-                        </div>
-
-                        {% if dl_prediction %}
-                        <div class="dual-engine-box">
-                            <div><span>Recommended (ML):</span> <span class="ml-text">{{ prediction }}</span></div>
-                            <div><span>Challenger (ANN):</span> <span class="dl-text">{{ dl_prediction }}</span></div>
-                            <hr style="border-color: rgba(255,255,255,0.1); margin: 8px 0;">
-                            <div style="font-size: 0.8em; color: var(--text-muted); justify-content: center;">
-                                Engine selected based on lower MAE variance.
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer">
-                <p>© 2026 EasternMartin Technologies. All Rights Reserved.</p>
-                <p>Powered by EasternMartin R&D Labs</p>
-            </div>
-        </main>
+    <div class="city-scroller">
+        <div class="city-pill">Ahmedabad</div>
+        <div class="city-pill">Amaravati</div>
+        <div class="city-pill">Amritsar</div>
+        <div class="city-pill">Bengaluru</div>
+        <div class="city-pill">Bhopal</div>
+        <div class="city-pill">Chandigarh</div>
+        <div class="city-pill">Chennai</div>
+        <div class="city-pill">Coimbatore</div>
+        <div class="city-pill">Delhi</div>
+        <div class="city-pill">Ernakulam</div>
+        <div class="city-pill">Gurugram</div>
+        <div class="city-pill">Guwahati</div>
+        <div class="city-pill">Hyderabad</div>
+        <div class="city-pill">Jaipur</div>
+        <div class="city-pill">Kochi</div>
+        <div class="city-pill">Kolkata</div>
+        <div class="city-pill">Lucknow</div>
+        <div class="city-pill">Mumbai</div>
     </div>
 
-    <script>
-        // --- 1. CLOCK LOGIC ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const clockElement = document.getElementById('clock-time');
-            function updateClock() {
-                const now = new Date();
-                let hours = now.getHours();
-                const minutes = now.getMinutes();
-                const seconds = now.getSeconds();
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12; 
-                const padZero = (num) => num.toString().padStart(2, '0');
-                clockElement.textContent = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)} ${ampm}`;
-            }
-            updateClock();
-            setInterval(updateClock, 1000);
+    <div class="main-wrapper">
+        <div class="content-grid">
+            
+            <form class="glass-card" id="aqi-form" action="/predict" method="post">
+                <h2>Enter Telemetry Data</h2>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="City">City Zone</label>
+                        <input type="text" id="City" name="city" required placeholder="e.g., Delhi" value="{{ request.form.get('city', '') }}">
+                    </div>
+                    <div class="input-group">
+                        <label for="lag1">Yesterday's AQI (Lag1)</label>
+                        <input type="number" id="lag1" name="lag1" step="0.01" required placeholder="150.00" value="{{ request.form.get('lag1', '') }}">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="PM2.5">PM2.5 Value</label>
+                        <input type="number" id="PM2.5" name="pm25" step="0.01" required placeholder="120.00" value="{{ request.form.get('pm25', '') }}">
+                    </div>
+                    <div class="input-group">
+                        <label for="PM10">PM10 Value</label>
+                        <input type="number" id="PM10" name="pm10" step="0.01" required placeholder="200.00" value="{{ request.form.get('pm10', '') }}">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="NO2">Nitrogen Dioxide (NO2)</label>
+                        <input type="number" id="NO2" name="no2" step="0.01" required placeholder="40.00" value="{{ request.form.get('no2', '') }}">
+                    </div>
+                    <div class="input-group">
+                        <label for="CO">Carbon Monoxide (CO)</label>
+                        <input type="number" id="CO" name="co" step="0.01" required placeholder="1.20" value="{{ request.form.get('co', '') }}">
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="SO2">Sulfur Dioxide (SO2)</label>
+                        <input type="number" id="SO2" name="so2" step="0.01" required placeholder="15.00" value="{{ request.form.get('so2', '') }}">
+                    </div>
+                    <div class="input-group">
+                        <label for="O3">Ozone (O3)</label>
+                        <input type="number" id="O3" name="o3" step="0.01" required placeholder="30.00" value="{{ request.form.get('o3', '') }}">
+                    </div>
+                </div>
 
-            // --- 2. CITY AUTO-FILL LOGIC ---
-            const cityItems = document.querySelectorAll('.city-list p');
+                <button type="submit" class="btn" id="predict-btn">Analyze & Predict AQI</button>
+            </form>
+
+            <div class="glass-card result-container">
+                <h2>Prediction Engine Result</h2>
+                
+                <div class="result-dial" id="result-dial">
+                    {% if prediction %}
+                        <span class="result-value">{{ prediction }}</span>
+                        <span class="result-category">{{ category }}</span>
+                    {% else %}
+                        <span class="result-value">---</span>
+                        <span class="result-category" style="color: var(--text-muted);">Awaiting Input</span>
+                    {% endif %}
+                </div>
+
+                {% if dl_prediction %}
+                <div class="dual-engine-box">
+                    <div><span>Primary (ML Engine):</span> <span class="ml-text">{{ prediction }}</span></div>
+                    <div><span>Challenger (ANN):</span> <span class="dl-text">{{ dl_prediction }}</span></div>
+                    <hr style="border-color: #cbd5e1; margin: 12px 0; border-style: dashed;">
+                    <div style="font-size: 0.85em; color: var(--text-muted); justify-content: center;">
+                        Final reading optimized via lower MAE variance.
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 Air Quality Prediction Systems. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // --- Naya CITY AUTO-FILL LOGIC for Pills ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const cityPills = document.querySelectorAll('.city-pill');
             const cityInputBox = document.getElementById('City');
             
-            cityItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    // Fill the input box with the clicked city name
+            cityPills.forEach(pill => {
+                pill.addEventListener('click', function() {
+                    // Fill the input box
                     cityInputBox.value = this.innerText;
                     
-                    // Add a cool focus effect so the user knows it worked
+                    // Add glow effect to show it registered
                     cityInputBox.focus();
-                    cityInputBox.style.borderColor = "var(--primary-accent)";
-                    cityInputBox.style.boxShadow = "0 0 10px rgba(0, 245, 212, 0.5)";
+                    cityInputBox.style.borderColor = "var(--light-green)";
+                    cityInputBox.style.boxShadow = "0 0 0 3px rgba(34, 197, 94, 0.2)";
                     
-                    // Remove the glow after 1 second
+                    // Remove glow
                     setTimeout(() => {
-                        cityInputBox.style.borderColor = "var(--panel-border)";
-                        cityInputBox.style.boxShadow = "none";
-                    }, 1000);
+                        cityInputBox.style.borderColor = "transparent";
+                        cityInputBox.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.05)";
+                    }, 800);
                 });
             });
         });
